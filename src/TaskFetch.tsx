@@ -24,7 +24,7 @@ export function TaskFetch({ onTasksFetched }) {
 
   return (
     <div>
-      {tasks.map((task) => (
+      {tasks.map((task: any) => (
         <div key={task.id}>
           <p>{task.name}</p>
         </div>
