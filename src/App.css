@@ -65,11 +65,6 @@
   display: none;
 }
 
-/* Smooth animations */
-* {
-  transition: transform 0.3s ease;
-}
-
 @keyframes pulse {
 
   0%,
@@ -84,4 +79,52 @@
 
 .spin-button:disabled {
   animation: pulse 1.5s ease-in-out infinite;
+}
+
+/* Text wrapping for roulette wheel segments */
+.wheel-wrapper svg text {
+  dominant-baseline: middle;
+  text-anchor: middle;
+  pointer-events: none;
+}
+
+/* Handle multi-line text in SVG using tspan elements */
+.wheel-wrapper svg text tspan {
+  dominant-baseline: middle;
+  text-anchor: middle;
+}
+
+/* Ensure text doesn't overflow wheel bounds */
+.wheel-wrapper svg {
+  overflow: visible;
+}
+
+/* Constrain text within segment bounds */
+.wheel-wrapper svg text {
+  max-width: 120px;
+  text-overflow: ellipsis;
+}
+
+/* Error message styling */
+.error-message {
+  background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+  color: white;
+  padding: 2rem 3rem;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(255, 107, 107, 0.4);
+  max-width: 600px;
+  margin: 2rem auto;
+}
+
+.error-message h2 {
+  margin: 0 0 1rem 0;
+  font-size: 2rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.error-message p {
+  margin: 0;
+  font-size: 1.1rem;
+  line-height: 1.6;
 }

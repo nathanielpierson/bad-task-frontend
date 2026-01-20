@@ -5,16 +5,33 @@ import "./App.css";
 
 function App() {
   const [tasks, setTasks] = useState<string[]>([]);
+  const [error, setError] = useState<string>("");
 
   const handleTasksFetched = (fetchedTasks: string[]) => {
     console.log("Tasks received in App:", fetchedTasks);
-    setTasks(fetchedTasks);
+
+    // Validate maximum number of options
+    if (fetchedTasks.length > 16) {
+      setError(`Too many options! Maximum is 16, but you have ${fetchedTasks.length}. Please reduce the number of options.`);
+      setTasks([]);
+    } else {
+      setError("");
+      setTasks(fetchedTasks);
+    }
+  };
+
+  // Truncate long text to a single line with ellipsis if it exceeds 20 characters
+  const formatText = (text: string, maxLength: number = 20): string => {
+    if (text.length <= maxLength) {
+      return text;
+    }
+    return text.substring(0, maxLength - 1) + "…";
   };
 
   // Memoize data to prevent recreating on every render
   const data = useMemo(() => {
     if (tasks.length > 0) {
-      return tasks.map((task: any) => ({ option: task.name }));
+      return tasks.map((task: any) => ({ option: formatText(task.name) }));
     }
     return [{ option: "Loading tasks..." }];
   }, [tasks]);
@@ -30,6 +47,19 @@ function App() {
     }
   };
 
+  // Show error message if there are too many options
+  if (error) {
+    return (
+      <div className="app-container">
+        <div className="error-message">
+          <h2>Error</h2>
+          <p>{error}</p>
+        </div>
+        <TaskFetch onTasksFetched={handleTasksFetched} />
+      </div>
+    );
+  }
+
   return (
     <div className="app-container">
       <div className="wheel-wrapper">
@@ -37,11 +67,11 @@ function App() {
           mustStartSpinning={mustSpin}
           prizeNumber={prizeNumber}
           data={data}
-          textDistance={70}
+          textDistance={65}
           spinDuration={0.6}
           backgroundColors={['#FF6B6B', '#4ECDC4', '#45B7D1', '#FFA07A', '#98D8C8', '#F7DC6F', '#BB8FCE', '#85C1E2']}
           textColors={['#FFFFFF']}
-          fontSize={16}
+          fontSize={13}
           outerBorderColor="#34495e"
           outerBorderWidth={10}
           innerRadius={20}
