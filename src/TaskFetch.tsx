@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 interface Task {
   id: number | string;
   name: string;
+  image_url?: string;
 }
 
 interface TaskFetchProps {

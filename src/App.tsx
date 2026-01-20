@@ -6,11 +6,13 @@ import "./App.css";
 interface Task {
   id: number | string;
   name: string;
+  image_url?: string;
 }
 
 function App() {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [error, setError] = useState<string>("");
+  const [selectedTask, setSelectedTask] = useState<Task | null>(null);
 
   const handleTasksFetched = useCallback((fetchedTasks: Task[]) => {
     console.log("Tasks received in App:", fetchedTasks);
@@ -49,6 +51,8 @@ function App() {
       const newPrizeNumber = Math.floor(Math.random() * data.length);
       setPrizeNumber(newPrizeNumber);
       setMustSpin(true);
+      // Clear previous selection while spinning
+      setSelectedTask(null);
     }
   };
 
@@ -86,6 +90,10 @@ function App() {
           radiusLineWidth={2}
           onStopSpinning={() => {
             setMustSpin(false);
+            // When spin stops, capture the selected task based on prizeNumber
+            if (tasks.length > 0 && prizeNumber >= 0 && prizeNumber < tasks.length) {
+              setSelectedTask(tasks[prizeNumber]);
+            }
           }}
         />
       </div>
@@ -97,6 +105,21 @@ function App() {
       >
         {mustSpin ? 'SPINNING...' : 'SPIN'}
       </button>
+
+      {selectedTask && (
+        <div className="result-container">
+          <h2 className="result-title">{selectedTask.name}</h2>
+          {selectedTask.image_url && (
+            <div className="result-image-wrapper">
+              <img
+                src={selectedTask.image_url}
+                alt={selectedTask.name}
+                className="result-image"
+              />
+            </div>
+          )}
+        </div>
+      )}
 
       <TaskFetch onTasksFetched={handleTasksFetched} />
     </div>
