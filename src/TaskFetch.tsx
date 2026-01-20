@@ -2,17 +2,26 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
 
-export function TaskFetch({ onTasksFetched }) {
-  const [tasks, setTasks] = useState([]);
+interface Task {
+  id: number | string;
+  name: string;
+}
+
+interface TaskFetchProps {
+  onTasksFetched?: (tasks: Task[]) => void;
+}
+
+export function TaskFetch({ onTasksFetched }: TaskFetchProps) {
+  const [tasks, setTasks] = useState<Task[]>([]);
 
   useEffect(() => {
     axios.get("http://localhost:3000/tasks.json")
       .then((response) => {
-        setTasks(response.data);
+        setTasks(response.data as Task[]);
 
         // Send tasks up to App
         if (onTasksFetched) {
-          onTasksFetched(response.data);
+          onTasksFetched(response.data as Task[]);
         }
 
         console.log("Tasks inside TaskFetch:", response.data);
@@ -24,7 +33,7 @@ export function TaskFetch({ onTasksFetched }) {
 
   return (
     <div>
-      {tasks.map((task: any) => (
+      {tasks.map((task) => (
         <div key={task.id}>
           <p>{task.name}</p>
         </div>

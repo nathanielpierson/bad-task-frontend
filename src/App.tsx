@@ -1,13 +1,18 @@
-import React, { useState, useMemo } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import { Wheel } from "react-custom-roulette";
 import { TaskFetch } from "./TaskFetch";
 import "./App.css";
 
+interface Task {
+  id: number | string;
+  name: string;
+}
+
 function App() {
-  const [tasks, setTasks] = useState<string[]>([]);
+  const [tasks, setTasks] = useState<Task[]>([]);
   const [error, setError] = useState<string>("");
 
-  const handleTasksFetched = (fetchedTasks: string[]) => {
+  const handleTasksFetched = useCallback((fetchedTasks: Task[]) => {
     console.log("Tasks received in App:", fetchedTasks);
 
     // Validate maximum number of options
@@ -18,7 +23,7 @@ function App() {
       setError("");
       setTasks(fetchedTasks);
     }
-  };
+  }, []);
 
   // Truncate long text to a single line with ellipsis if it exceeds 20 characters
   const formatText = (text: string, maxLength: number = 20): string => {
@@ -31,7 +36,7 @@ function App() {
   // Memoize data to prevent recreating on every render
   const data = useMemo(() => {
     if (tasks.length > 0) {
-      return tasks.map((task: any) => ({ option: formatText(task.name) }));
+      return tasks.map((task) => ({ option: formatText(task.name) }));
     }
     return [{ option: "Loading tasks..." }];
   }, [tasks]);
