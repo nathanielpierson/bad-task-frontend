@@ -1,13 +1,8 @@
 import React, { useCallback, useMemo, useState } from "react";
 import { Wheel } from "react-custom-roulette";
 import { TaskFetch } from "./TaskFetch";
+import { Task } from "./tasks";
 import "./App.css";
-
-interface Task {
-  id: number | string;
-  name: string;
-  image_url?: string;
-}
 
 function App() {
   const [tasks, setTasks] = useState<Task[]>([]);
